@@ -4,9 +4,11 @@ Optimizers for skip-thoughts
 import theano
 import theano.tensor as tensor
 import numpy
+import os
 
 # name(hyperp, tparams, grads, inputs (list), cost) = f_grad_shared, f_update
 def adam(lr, tparams, grads, inp, cost):
+    theano.config.floatX = "float32"
     gshared = [theano.shared(p.get_value() * 0., name='%s_grad'%k) for k, p in tparams.iteritems()]
     gsup = [(gs, g) for gs, g in zip(gshared, grads)]
 

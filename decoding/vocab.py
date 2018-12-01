@@ -27,7 +27,7 @@ def build_dictionary(text):
 
     return worddict, wordcount
 
-def load_dictionary(loc='/ais/gobi3/u/rkiros/bookgen/book_dictionary_large.pkl'):
+def load_dictionary(loc='./dictionary.pkl'):
     """
     Load a dictionary
     """

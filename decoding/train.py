@@ -4,11 +4,11 @@ Main trainer function
 import theano
 import theano.tensor as tensor
 
+import os
 import cPickle as pkl
 import numpy
 import copy
 
-import os
 import warnings
 import sys
 import time
@@ -34,16 +34,16 @@ def trainer(X, C, stmodel,
             decoder='gru',
             doutput=False,
             max_epochs=5,
-            dispFreq=1,
+            dispFreq=100,
             decay_c=0.,
             grad_clip=5.,
             n_words=40000,
             maxlen_w=100,
             optimizer='adam',
             batch_size = 16,
-            saveto='/u/rkiros/research/semhash/models/toy.npz',
-            dictionary='/ais/gobi3/u/rkiros/bookgen/book_dictionary_large.pkl',
-            embeddings=None,
+            saveto='./toy.npz',
+            dictionary='./dictionary.pkl',
+            embeddings= None,
             saveFreq=1000,
             sampleFreq=100,
             reload_=False):
@@ -72,6 +72,8 @@ def trainer(X, C, stmodel,
     model_options['reload_'] = reload_
 
     print model_options
+
+    theano.config.floatX = "float32"
 
     # reload options
     if reload_ and os.path.exists(saveto):
@@ -114,7 +116,6 @@ def trainer(X, C, stmodel,
         params = load_params(saveto, params)
 
     tparams = init_tparams(params)
-
     trng, inps, cost = build_model(tparams, model_options)
 
     print 'Building sampler'
@@ -179,7 +180,8 @@ def trainer(X, C, stmodel,
 
             x, mask, ctx = homogeneous_data.prepare_data(x, c, worddict, stmodel, maxlen=maxlen_w, n_words=n_words)
 
-            if x == None:
+            print(x)
+            if x is None:
                 print 'Minibatch with zero sample under length ', maxlen_w
                 uidx -= 1
                 continue
